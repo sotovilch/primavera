@@ -1,0 +1,676 @@
+/* ==========================================================================
+   NUESTRA PRIMAVERA - ESTILO GTA VI SCROLLYTELLING
+   Paleta: Golden Hour, Sunset Magenta, Amber & Polished Steel
+   ========================================================================== */
+
+:root {
+  --font-display: 'Cinzel', serif;
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Outfit', sans-serif;
+
+  /* Sunset / Golden Hour Paleta GTA VI */
+  --bg-deep-night: #0e0718;
+  --sunset-purple: #240a34;
+  --sunset-magenta: #70104e;
+  --sunset-crimson: #c32d4b;
+  --sunset-orange: #f37335;
+  --sunset-gold: #fdc830;
+  --spring-yellow: #ffde59;
+  --steel-bright: #f0f4f8;
+  --steel-mid: #97a2b2;
+  --steel-dark: #373f4d;
+
+  --text-pure: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.85);
+  --text-gold: #ffe77a;
+
+  --glass-bg: rgba(24, 12, 34, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-glow: rgba(253, 200, 48, 0.25);
+}
+
+/* Reset y base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-deep-night);
+  color: var(--text-pure);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+/* Canvas interactivo de fondo */
+#ambient-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* HUD Superior Estilo Tráiler / Cinematográfico */
+.hud-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2.5rem;
+  z-index: 50;
+  pointer-events: auto;
+  background: linear-gradient(180deg, rgba(14, 7, 24, 0.88) 0%, rgba(14, 7, 24, 0) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.hud-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.hud-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  color: var(--sunset-gold);
+  text-transform: uppercase;
+}
+
+.hud-tagline {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+}
+
+.hud-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 9999px;
+  color: var(--text-pure);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.audio-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--sunset-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px var(--glass-glow);
+}
+
+.audio-btn.is-playing {
+  border-color: var(--sunset-gold);
+  background: rgba(253, 200, 48, 0.15);
+  color: var(--sunset-gold);
+}
+
+.audio-btn.is-playing #sound-waves {
+  animation: pulseWaves 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseWaves {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.scroll-indicator-pill {
+  width: 90px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.scroll-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--sunset-magenta), var(--sunset-orange), var(--spring-yellow));
+  box-shadow: 0 0 10px var(--sunset-orange);
+  transition: width 0.1s linear;
+}
+
+/* Estructura Scrollytelling Pinned */
+.story-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.stage-viewport {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* Espacio físico para scrollear con ritmo pausado y contemplativo */
+.scroll-spacer {
+  height: 1050vh; /* Mayor recorrido para que cada imagen y texto tengan su momento */
+  width: 100%;
+  pointer-events: none;
+}
+
+/* Fondo Atmosférico GTA VI Sunset */
+.sky-backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 70%, 
+    var(--sunset-orange) 0%, 
+    var(--sunset-crimson) 28%, 
+    var(--sunset-magenta) 55%, 
+    var(--sunset-purple) 80%, 
+    var(--bg-deep-night) 100%
+  );
+  z-index: 1;
+  transition: background 0.8s ease-out;
+}
+
+.sun-glow {
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60vw;
+  height: 60vw;
+  max-width: 650px;
+  max-height: 650px;
+  background: radial-gradient(circle, rgba(255, 222, 89, 0.7) 0%, rgba(243, 115, 53, 0.35) 45%, rgba(0,0,0,0) 70%);
+  filter: blur(45px);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.vignette-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 35%, rgba(10, 4, 18, 0.8) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 0);
+  background-size: 24px 24px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ==========================================================================
+   CAPA DE ELEMENTOS GRÁFICOS (PROTAGÓNICOS)
+   ========================================================================== */
+.stage-graphics-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.graphic-element {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: scale(0.6);
+  will-change: transform, opacity, filter;
+}
+
+/* 1. Flor Amarilla */
+.flower-graphic {
+  width: 440px;
+  height: 440px;
+  position: relative;
+}
+
+.flower-glow-halo {
+  position: absolute;
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle, rgba(255, 210, 20, 0.45) 0%, rgba(243, 115, 53, 0.15) 55%, transparent 75%);
+  filter: blur(25px);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.flower-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 25px 60px rgba(255, 174, 0, 0.55));
+}
+
+.flower-petals-outer .petal {
+  transform-origin: 200px 200px;
+}
+
+/* 2. Collar de Pareja de Gatos */
+.cats-graphic {
+  width: 420px;
+  height: 440px;
+  position: relative;
+}
+
+.cats-glow-halo {
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, rgba(243, 115, 53, 0.22) 45%, rgba(112, 16, 78, 0.15) 65%, transparent 80%);
+  filter: blur(32px);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cats-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.cats-sparkle-svg {
+  transform-origin: 250px 165px;
+  animation: sparkleHeartSvg 3.8s infinite ease-in-out;
+}
+
+@keyframes sparkleHeartSvg {
+  0% { transform: rotate(0deg) scale(0.9); opacity: 0.8; }
+  50% { transform: rotate(180deg) scale(1.25); opacity: 1; }
+  100% { transform: rotate(360deg) scale(0.9); opacity: 0.8; }
+}
+
+/* 3. Emblema 29 de Abril */
+.date-graphic {
+  width: auto;
+  max-width: 90vw;
+}
+
+.date-cinematic-card {
+  padding: 2.8rem 4.2rem;
+  background: rgba(22, 10, 32, 0.75);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 28px;
+  text-align: center;
+  box-shadow: 0 35px 85px rgba(0, 0, 0, 0.65), inset 0 0 30px rgba(253, 200, 48, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.date-badge-top {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.4em;
+  color: var(--sunset-gold);
+  text-transform: uppercase;
+}
+
+.date-number-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.date-num {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 9vw, 7rem);
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(180deg, #FFFFFF 25%, var(--sunset-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 10px 35px rgba(253, 200, 48, 0.5);
+}
+
+.date-divider {
+  font-size: 3.5rem;
+  color: var(--sunset-orange);
+}
+
+.date-month {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #FFFFFF;
+}
+
+.date-subbadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ==========================================================================
+   CAPA DE NARRATIVA Y TEXTOS (LIMPITOS, SIN SUPERPOSICIONES)
+   ========================================================================== */
+.narrative-container {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.scene-block {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene-content {
+  max-width: 680px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.cinema-eyebrow {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.4em;
+  color: var(--sunset-gold);
+  text-transform: uppercase;
+  display: block;
+}
+
+.cinema-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 6.5vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  text-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+}
+
+.cinema-subtitle {
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.cinema-paragraph {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 2.6vw, 1.65rem);
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.95);
+  font-style: italic;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  max-width: 620px;
+}
+
+/* Variantes de Resplandor Textual */
+.glow-yellow {
+  background: linear-gradient(180deg, #FFFFFF 25%, var(--spring-yellow) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 6px 25px rgba(255, 222, 89, 0.4));
+}
+
+.glow-silver {
+  background: linear-gradient(180deg, #FFFFFF 30%, var(--steel-bright) 70%, var(--steel-mid) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 6px 25px rgba(255, 255, 255, 0.45));
+}
+
+.glow-sunset {
+  background: linear-gradient(180deg, #FFFFFF 20%, var(--sunset-orange) 80%, var(--sunset-crimson) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 6px 25px rgba(243, 115, 53, 0.45));
+}
+
+.grand-finale {
+  background: linear-gradient(180deg, #FFFFFF 15%, var(--sunset-gold) 65%, var(--sunset-orange) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 8px 35px rgba(253, 200, 48, 0.55));
+}
+
+.tag-pill {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  background: rgba(14, 7, 24, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #FFFFFF;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+}
+
+.pill-date-highlight {
+  background: rgba(10, 4, 18, 0.88);
+  border: 1.5px solid var(--sunset-gold);
+  color: #FFFFFF;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(253, 200, 48, 0.35);
+}
+
+/* Indicador de scroll inicial */
+.scroll-prompt {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.scroll-text {
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.scroll-mouse-icon {
+  width: 22px;
+  height: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  position: relative;
+}
+
+.scroll-mouse-icon .wheel {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 7px;
+  background-color: var(--sunset-gold);
+  border-radius: 2px;
+  animation: mouseScroll 1.8s infinite ease-in-out;
+}
+
+@keyframes mouseScroll {
+  0% { transform: translate(-50%, 0); opacity: 1; }
+  100% { transform: translate(-50%, 14px); opacity: 0; }
+}
+
+/* Escena Final y Acciones */
+.final-scene {
+  pointer-events: auto;
+}
+
+.final-words {
+  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+  max-width: 580px;
+}
+
+.interactive-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+  pointer-events: auto;
+}
+
+.gta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.95rem 1.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, var(--sunset-gold) 0%, var(--sunset-orange) 100%);
+  color: #110619;
+  box-shadow: 0 8px 30px rgba(243, 115, 53, 0.45);
+}
+
+.primary-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 40px rgba(253, 200, 48, 0.6);
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+}
+
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-3px);
+}
+
+.love-counter {
+  margin-top: 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--sunset-gold);
+  text-shadow: 0 0 15px rgba(253, 200, 48, 0.6);
+  animation: fadeInPop 0.5s ease-out;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes fadeInPop {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Responsividad para Dispositivos Móviles */
+@media (max-width: 768px) {
+  .hud-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .hud-badge {
+    font-size: 0.65rem;
+  }
+
+  .hud-tagline {
+    display: none;
+  }
+
+  .scroll-indicator-pill {
+    width: 60px;
+  }
+
+  .flower-graphic {
+    width: 300px;
+    height: 300px;
+  }
+
+  .cats-graphic {
+    width: 280px;
+    height: 340px;
+  }
+
+  .cats-pendant-img {
+    max-width: 260px;
+  }
+
+  .date-cinematic-card {
+    padding: 1.8rem 2.2rem;
+  }
+
+  .date-num {
+    font-size: 3.6rem;
+  }
+
+  .date-month {
+    font-size: 2rem;
+  }
+
+  .interactive-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .gta-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feliz Día de la Primavera 💛</title>
+  <meta name="description" content="Una dedicatoria cinematográfica interactiva para celebrar el día de la primavera, nuestro amor y el 29 de abril.">
+  <!-- Fuentes modernas Google Fonts: Cinzel & Outfit & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Canvas de partículas y atardecer interactivo -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <!-- HUD Superior Estilo Cinematográfico -->
+  <header class="hud-header">
+    <div class="hud-brand">
+      <span class="hud-badge">SPRING EDITION</span>
+      <span class="hud-tagline">AN AMOR STORY</span>
+    </div>
+    
+    <div class="hud-controls">
+      <button id="audio-toggle" class="audio-btn" aria-label="Reproducir o pausar música de fondo">
+        <span class="audio-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path id="sound-waves" d="M15.54 8.46a5 5 0 0 1 0 7.07 M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+        </span>
+        <span id="audio-label" class="audio-text">Música: Silenciada</span>
+      </button>
+
+      <div class="scroll-indicator-pill">
+        <div class="scroll-progress-bar" id="progress-bar"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal de Scrollytelling Pinned -->
+  <main class="story-wrapper">
+
+    <!-- Escenario Visual Pinned (Fijo con GSAP ScrollTrigger) -->
+    <div class="stage-viewport" id="stage-viewport">
+      
+      <!-- Fondo de Gradiente Dinámico Estilo GTA VI Sunset -->
+      <div class="sky-backdrop">
+        <div class="sun-glow"></div>
+        <div class="vignette-overlay"></div>
+        <div class="grain-overlay"></div>
+      </div>
+
+      <!-- CAPA 1: ELEMENTOS GRÁFICOS VISUALES (Se aprecian en su propio momento) -->
+      <div class="stage-graphics-container">
+        
+        <!-- Elemento 1: Flor Amarilla Gigante Hiper Estilizada -->
+        <div class="graphic-element flower-graphic" id="flower-asset">
+          <div class="flower-glow-halo"></div>
+          <svg viewBox="0 0 400 400" class="flower-svg" id="flower-svg">
+            <defs>
+              <filter id="gold-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="8" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              <radialGradient id="petalGrad1" cx="50%" cy="30%" r="70%">
+                <stop offset="0%" stop-color="#FFF8B8" />
+                <stop offset="50%" stop-color="#FFD214" />
+                <stop offset="100%" stop-color="#F28E00" />
+              </radialGradient>
+              <radialGradient id="petalGrad2" cx="50%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#FFE042" />
+                <stop offset="85%" stop-color="#E87600" />
+                <stop offset="100%" stop-color="#B24700" />
+              </radialGradient>
+              <radialGradient id="centerGrad" cx="45%" cy="45%" r="55%">
+                <stop offset="0%" stop-color="#FFDE59" />
+                <stop offset="35%" stop-color="#D66000" />
+                <stop offset="85%" stop-color="#541B00" />
+                <stop offset="100%" stop-color="#320E00" />
+              </radialGradient>
+            </defs>
+            
+            <g class="flower-petals-outer" filter="url(#gold-glow)">
+              <path class="petal p1" d="M200,200 C160,80 240,80 200,200 Z" fill="url(#petalGrad1)" />
+              <path class="petal p2" d="M200,200 C80,160 80,240 200,200 Z" fill="url(#petalGrad1)" transform="rotate(45 200 200)" />
+              <path class="petal p3" d="M200,200 C160,320 240,320 200,200 Z" fill="url(#petalGrad1)" transform="rotate(90 200 200)" />
+              <path class="petal p4" d="M200,200 C320,160 320,240 200,200 Z" fill="url(#petalGrad1)" transform="rotate(135 200 200)" />
+              <path class="petal p5" d="M200,200 C160,80 240,80 200,200 Z" fill="url(#petalGrad1)" transform="rotate(180 200 200)" />
+              <path class="petal p6" d="M200,200 C80,160 80,240 200,200 Z" fill="url(#petalGrad1)" transform="rotate(225 200 200)" />
+              <path class="petal p7" d="M200,200 C160,320 240,320 200,200 Z" fill="url(#petalGrad1)" transform="rotate(270 200 200)" />
+              <path class="petal p8" d="M200,200 C320,160 320,240 200,200 Z" fill="url(#petalGrad1)" transform="rotate(315 200 200)" />
+            </g>
+
+            <g class="flower-petals-inner">
+              <path class="petal-in" d="M200,200 C175,110 225,110 200,200 Z" fill="url(#petalGrad2)" transform="rotate(22.5 200 200)" />
+              <path class="petal-in" d="M200,200 C175,110 225,110 200,200 Z" fill="url(#petalGrad2)" transform="rotate(67.5 200 200)" />
+              <path class="petal-in" d="M200,200 C175,110 225,110 200,200 Z" fill="url(#petalGrad2)" transform="rotate(112.5 200 200)" />
+              <path class="petal-in" d="M200,200 C175,110 225,110 200,200 Z" fill="url(#petalGrad2)" transform="rotate(157.5 200 200)" />
+              <path class="petal-in" d="M200,200 C175,110 225,110 200,200 Z" fill="url(#petalGrad2)" transform="rotate(202.5 200 200)" />
+              <path class="petal-in" d="M200,200 C175,110 225,110 200,200 Z" fill="url(#petalGrad2)" transform="rotate(247.5 200 200)" />
+              <path class="petal-in" d="M200,200 C175,110 225,110 200,200 Z" fill="url(#petalGrad2)" transform="rotate(292.5 200 200)" />
+              <path class="petal-in" d="M200,200 C175,110 225,110 200,200 Z" fill="url(#petalGrad2)" transform="rotate(337.5 200 200)" />
+            </g>
+
+            <circle cx="200" cy="200" r="48" fill="url(#centerGrad)" />
+            <circle cx="200" cy="200" r="42" fill="none" stroke="#FFAE00" stroke-width="2" stroke-dasharray="3 5" opacity="0.85" />
+            <circle cx="200" cy="200" r="28" fill="none" stroke="#FFDC73" stroke-width="1.5" stroke-dasharray="2 4" opacity="0.8" />
+          </svg>
+        </div>
+
+        <!-- Elemento 2: Collar de Pareja de Gatos Entrelazados en SVG Hiper Estilizado -->
+        <div class="graphic-element cats-graphic" id="cats-asset">
+          <div class="cats-glow-halo"></div>
+          <svg viewBox="0 0 500 520" class="cats-svg" id="cats-svg">
+            <defs>
+              <!-- Filtro de sombra profunda y resplandor -->
+              <filter id="pendant-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#05020a" flood-opacity="0.85"/>
+              </filter>
+              <filter id="silver-sparkle-glow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+
+              <!-- Gradiente Acero Pulido Brillante (Gato Plata / Blanco) -->
+              <linearGradient id="silverCatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFFFFF" />
+                <stop offset="25%" stop-color="#E5ECF4" />
+                <stop offset="50%" stop-color="#C2CCD8" />
+                <stop offset="75%" stop-color="#ECEFF4" />
+                <stop offset="100%" stop-color="#9BA8BA" />
+              </linearGradient>
+
+              <!-- Gradiente Ónix / Acero Negro Esmaltado Pulido (Gato Negro) -->
+              <linearGradient id="blackCatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#2D3039" />
+                <stop offset="25%" stop-color="#14161C" />
+                <stop offset="60%" stop-color="#0B0C10" />
+                <stop offset="85%" stop-color="#1D2028" />
+                <stop offset="100%" stop-color="#08090C" />
+              </linearGradient>
+
+              <!-- Reflejo Metálico Biselado -->
+              <linearGradient id="metalBevelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+                <stop offset="50%" stop-color="#A5B2C4" stop-opacity="0.3" />
+                <stop offset="100%" stop-color="#2D3542" stop-opacity="0.8" />
+              </linearGradient>
+
+              <!-- Gradiente Cadena Acero -->
+              <linearGradient id="chainGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#DCE3EB" />
+                <stop offset="50%" stop-color="#FFFFFF" />
+                <stop offset="100%" stop-color="#7B8798" />
+              </linearGradient>
+            </defs>
+
+            <!-- Cadenas y Enganches Superiores Exactos a la Referencia -->
+            <g class="pendant-chains" opacity="0.95">
+              <!-- Broche Colgante Izquierdo (Gato Negro / Ébano) -->
+              <path d="M 185,5 Q 185,45 185,75" fill="none" stroke="url(#chainGrad)" stroke-width="6" stroke-linecap="round" stroke-dasharray="1 9" />
+              <polygon points="175,75 195,75 190,118 180,118" fill="url(#blackCatGrad)" stroke="#4A5260" stroke-width="1.5" />
+              <circle cx="185" cy="120" r="5" fill="#14161C" stroke="#4A5260" stroke-width="1.5" />
+
+              <!-- Broche Colgante Derecho (Gato Plateado) -->
+              <path d="M 335,10 Q 335,50 335,85" fill="none" stroke="url(#chainGrad)" stroke-width="6" stroke-linecap="round" stroke-dasharray="1 9" />
+              <polygon points="325,85 345,85 340,128 330,128" fill="url(#silverCatGrad)" stroke="#FFFFFF" stroke-width="1.5" />
+              <circle cx="335" cy="130" r="5" fill="#DCE3EB" stroke="#FFFFFF" stroke-width="1.5" />
+            </g>
+
+            <!-- CUERPO PRINCIPAL: CORAZÓN INTERLOCKING PUZZLE EXACTO A LA REFERENCIA -->
+            <g class="pendant-body" filter="url(#pendant-shadow)">
+              
+              <!-- PIEZA 1: GATO NEGRO / ÉBANO PULIDO
+                   Forma el lóbulo exterior izquierdo del corazón con colita en rulo superior,
+                   y en la parte inferior derecha contiene el cuerpo completo del gatito reclinado
+                   con su patita acariciando al otro gatito -->
+              <g class="puzzle-piece-black">
+                <path d="
+                  M 185,125 
+                  C 155,130 115,160 112,215 
+                  C 108,285 155,360 250,440 
+                  C 305,395 350,335 348,275 
+                  C 346,245 328,215 305,210 
+                  L 298,225 
+                  C 292,215 285,212 280,220 
+                  C 265,240 250,265 248,272 
+                  L 220,270 
+                  C 215,270 212,275 215,282 
+                  C 220,290 235,292 245,295 
+                  C 248,315 248,335 242,365 
+                  C 238,382 225,402 215,410 
+                  C 175,370 148,320 142,260 
+                  C 138,205 165,168 215,165 
+                  C 245,163 260,180 255,205 
+                  C 252,218 242,224 235,220 
+                  C 228,215 230,205 235,200 
+                  C 238,195 235,185 220,185 
+                  C 190,185 180,140 185,125 Z"
+                  fill="url(#blackCatGrad)" 
+                  stroke="#474F5C" 
+                  stroke-width="2.5" 
+                  stroke-linejoin="round" />
+
+                <!-- OREJAS Y DETALLES DEL GATITO EN LA PIEZA NEGRA (Gatito derecho) -->
+                <!-- Oreja derecha con relieve interno -->
+                <polygon points="315,225 330,260 305,255" fill="#0C0D12" stroke="#5E697A" stroke-width="1.5" />
+                <!-- Ojo cerrado dulce del gatito -->
+                <path d="M 285,255 Q 295,250 302,256" fill="none" stroke="#E2E8F0" stroke-width="3" stroke-linecap="round" />
+                <path d="M 292,260 Q 298,266 304,263" fill="none" stroke="#E2E8F0" stroke-width="2.5" stroke-linecap="round" />
+                <!-- Bigotitos grabados en plata sobre el gato negro -->
+                <path d="M 278,268 L 255,274" fill="none" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" />
+                <path d="M 276,275 L 252,286" fill="none" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" />
+                <path d="M 278,282 L 258,298" fill="none" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" />
+                <!-- Manchas/líneas del lomo -->
+                <path d="M 275,235 Q 282,238 290,234" fill="none" stroke="#3D4452" stroke-width="2.5" stroke-linecap="round" />
+                <path d="M 270,245 Q 278,248 286,244" fill="none" stroke="#3D4452" stroke-width="2.5" stroke-linecap="round" />
+              </g>
+
+              <!-- PIEZA 2: GATO BLANCO / ACERO PULIDO
+                   Encaja como la pieza complementaria de rompecabezas:
+                   Forma el lóbulo superior derecho del corazón, la silueta interior izquierda
+                   donde entra la colita en rulo, y en la parte inferior izquierda tiene la cabeza
+                   del gatito que recibe la caricia -->
+              <g class="puzzle-piece-white">
+                <path d="
+                  M 335,135 
+                  C 310,135 285,155 258,185 
+                  C 255,188 250,185 250,180 
+                  C 250,165 240,155 218,155 
+                  C 165,155 132,198 138,258 
+                  C 144,318 172,368 212,408 
+                  C 222,400 234,380 238,362 
+                  C 244,332 244,312 241,292 
+                  C 231,289 216,287 211,279 
+                  C 208,272 211,267 216,267 
+                  L 244,269 
+                  C 246,262 261,237 276,217 
+                  C 281,209 288,212 294,222 
+                  L 301,207 
+                  C 324,212 342,242 344,272 
+                  C 346,310 325,355 300,380 
+                  C 335,325 365,270 365,215 
+                  C 365,160 325,135 335,135 Z"
+                  fill="url(#silverCatGrad)" 
+                  stroke="#FFFFFF" 
+                  stroke-width="2" 
+                  stroke-linejoin="round" />
+
+                <!-- OREJITAS Y DETALLES DEL GATITO EN LA PIEZA BLANCA (Gatito inferior izquierdo) -->
+                <!-- Orejas gato blanco mirando hacia arriba -->
+                <polygon points="198,405 208,375 190,385" fill="#E8EEF5" stroke="#9BA8BA" stroke-width="1.5" />
+                <polygon points="182,392 190,365 174,375" fill="#E8EEF5" stroke="#9BA8BA" stroke-width="1.5" />
+                <!-- Mancha oscura característica en la orejita / lomo como la foto -->
+                <path d="M 175,372 C 165,380 162,395 172,402 C 180,402 182,390 175,372 Z" fill="#20242D" />
+
+                <!-- Ojo cerrado dulce del gatito blanco -->
+                <path d="M 215,350 Q 222,342 228,348" fill="none" stroke="#252B36" stroke-width="3" stroke-linecap="round" />
+                <!-- Bigotitos grabados en tono acero oscuro -->
+                <path d="M 205,332 L 180,326" fill="none" stroke="#252B36" stroke-width="2" stroke-linecap="round" />
+                <path d="M 202,340 L 176,342" fill="none" stroke="#252B36" stroke-width="2" stroke-linecap="round" />
+                <path d="M 205,348 L 182,356" fill="none" stroke="#252B36" stroke-width="2" stroke-linecap="round" />
+              </g>
+
+              <!-- LÍNEA DE ENCAJE / CORTE DE ROMPECABEZAS (Puzzle Joint Highlight) -->
+              <path d="
+                M 255,185 
+                C 248,205 238,218 230,212 
+                C 222,206 226,196 230,192 
+                M 212,408 
+                C 222,400 234,380 238,362 
+                C 244,332 244,312 241,292 
+                C 231,289 216,287 211,279 
+                C 208,272 211,267 216,267 
+                L 244,269 
+                C 246,262 261,237 276,217 
+                C 281,209 288,212 294,222 
+                L 301,207"
+                fill="none" 
+                stroke="#FFFFFF" 
+                stroke-width="1.8" 
+                opacity="0.9" />
+            </g>
+
+            <!-- Destello estelar brillante en el punto de contacto de la patita y la carita -->
+            <g class="cats-sparkle-svg" filter="url(#silver-sparkle-glow)">
+              <polygon points="230,270 234,285 249,289 234,293 230,308 226,293 211,289 226,285" fill="#FFFFFF" />
+              <polygon points="230,276 233,286 243,289 233,292 230,302 227,292 217,289 227,286" fill="#FFF2B2" />
+              <circle cx="230,289" r="3.5" fill="#FFFFFF" />
+            </g>
+          </svg>
+        </div>
+
+        <!-- Elemento 3: Emblema de la Fecha: 29 de Abril -->
+        <div class="graphic-element date-graphic" id="date-asset">
+          <div class="date-cinematic-card">
+            <div class="date-badge-top">NUESTRO COMIENZO</div>
+            <div class="date-number-wrap">
+              <span class="date-num">29</span>
+              <span class="date-divider">·</span>
+              <span class="date-month">ABRIL</span>
+            </div>
+            <div class="date-subbadge">EL COMIENZO DE NUESTRA HISTORIA</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CAPA 2: NARRATIVA Y TEXTOS (Se alternan limpiamente sin tapar las imágenes) -->
+      <div class="narrative-container">
+        
+        <!-- Escena 1: Prólogo / Entrada Estilo GTA VI -->
+        <section class="scene-block" id="scene-intro">
+          <div class="scene-content">
+            <span class="cinema-eyebrow">UNA HISTORIA ESPECIAL</span>
+            <h1 class="cinema-title">Nuestra Primavera</h1>
+            <p class="cinema-subtitle">Cada historia de amor es única, pero la nuestra es mi favorita en el mundo entero.</p>
+            <div class="scroll-prompt">
+              <span class="scroll-text">Desliza para comenzar</span>
+              <div class="scroll-mouse-icon">
+                <span class="wheel"></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Escena 2: Momento de Texto de las Flores Amarillas (Fondo limpio) -->
+        <section class="scene-block" id="scene-text-flores">
+          <div class="scene-content">
+            <span class="cinema-eyebrow">21 DE SEPTIEMBRE</span>
+            <h2 class="cinema-title">Flores Amarillas</h2>
+            <p class="cinema-paragraph">
+              Florecen como el recordatorio de tu calidez y de tu sonrisa, esa que ilumina mis días y llena mi mundo con el color más hermoso y radiante.
+            </p>
+            <div class="tag-pill">Promesa de Primavera & Cariño Infinito</div>
+          </div>
+        </section>
+
+        <!-- Escena 3: Momento de Texto del Collar de Gatos (Fondo limpio) -->
+        <section class="scene-block" id="scene-text-cats">
+          <div class="scene-content">
+            <span class="cinema-eyebrow">DOS MITADES QUE ENCAJAN</span>
+            <h2 class="cinema-title">Nuestros Corazones</h2>
+            <p class="cinema-paragraph">
+              Como dos gatitos inseparables que se cuidan y se complementan. Dos almas unidas que forman un solo corazón, caminando juntos en cada paso del camino.
+            </p>
+            <div class="tag-pill">Juntos somos el equipo perfecto</div>
+          </div>
+        </section>
+
+        <!-- Escena 4: Momento de Texto del 29 de Abril (Fondo limpio) -->
+        <section class="scene-block" id="scene-text-date">
+          <div class="scene-content">
+            <span class="cinema-eyebrow">NUESTRA FECHA SAGRADA</span>
+            <h2 class="cinema-title">El Día Inolvidable</h2>
+            <p class="cinema-paragraph">
+              Aquel 29 de abril marcó el inicio del viaje más feliz de mi vida. El día en que el destino decidió bendecirme con tu amor sincero.
+            </p>
+            <div class="tag-pill pill-date-highlight">29 / 04 · Por siempre en mi corazón</div>
+          </div>
+        </section>
+
+        <!-- Escena 5: Gran Cierre "Feliz Día de la Primavera" -->
+        <section class="scene-block" id="scene-finale">
+          <div class="scene-content final-scene">
+            <span class="cinema-eyebrow">CON TODO MI AMOR</span>
+            <h2 class="cinema-title">¡Feliz Día de la Primavera!</h2>
+            <p class="cinema-paragraph final-words">
+              Gracias por ser mi primavera cada segundo de todos los días. Te amo con todo mi ser. 💛🐾
+            </p>
+
+            <div class="interactive-actions">
+              <button id="send-love-btn" class="gta-btn primary-btn">
+                <span class="btn-icon">💛</span>
+                <span class="btn-text">Enviarte un Abrazo Virtual</span>
+              </button>
+              <button id="replay-btn" class="gta-btn secondary-btn">
+                <span class="btn-icon">↺</span>
+                <span class="btn-text">Revivir la Historia</span>
+              </button>
+            </div>
+
+            <div id="love-counter" class="love-counter hidden">
+              ¡Has recibido infinitos abrazos, besitos y caricias primaverales! ✨🌻🐾
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+    <!-- Espaciador de Scroll Falso Extendido para un Ritmo Pausado y Cinematográfico -->
+    <div class="scroll-spacer"></div>
+
+  </main>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
